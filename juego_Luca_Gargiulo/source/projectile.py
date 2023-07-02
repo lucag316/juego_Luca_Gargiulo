@@ -1,6 +1,6 @@
 import pygame
 
-class Bomba(pygame.sprite.Sprite):
+class Projectile(pygame.sprite.Sprite):
     def __init__(self, path_imagen: str, size: tuple, midbotton: tuple, speed: int) -> None:
         super().__init__()
         

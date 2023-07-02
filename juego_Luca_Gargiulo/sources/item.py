@@ -1,6 +1,7 @@
 # import pygame
 
-# class Enemy(pygame.sprite.Sprite):
+
+# class Item(pygame.sprite.Sprite):
 #     def __init__(self, path_imagen: str, size: tuple, center: tuple, speed: int) -> None:
 #         super().__init__()
         
