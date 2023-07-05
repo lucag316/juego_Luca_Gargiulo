@@ -1,5 +1,5 @@
-import pygame
+# import pygame
 
-class Platform:
-    def __init__(self) -> None:
-        pass
+# class Platform:
+#     def __init__(self) -> None:
+#         pass
