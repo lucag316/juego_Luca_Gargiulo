@@ -34,8 +34,8 @@ font = pygame.font.Font(PATH_FONT_DBZ, 48)
 
 
 player = Player(POS_START_PLAYER, SPEED_PLAYER, SPEED_PLAYER * 2, GRAVITY_PLAYER, JUMP_POWER_PLAYER, FRAME_RATE_MS_PLAYER, MOVE_RATE_MS_PLAYER, JUMP_HEIGHT_PLAYER, screen)
-freezer = Freezer(POS_START_FREEZER, SPEED_FREEZER, 100, 800)
-cell = Cell(POS_START_CELL, SPEED_CELL,  200, 1000)
+freezer = Freezer(POS_START_FREEZER, SPEED_FREEZER, 650, 900)
+cell = Cell(POS_START_CELL, SPEED_CELL,  250, 900)
 
 trampa_1 = Trampa_horizontal(POS_START_TRAMPA_1, SPEED_TRAMPA_1, 0, 1175, PATH_IMAGE_TRAMPA_VIOLETA)
 trampa_2 = Trampa_vertical(POS_START_TRAMPA_2, SPEED_TRAMPA_2, 325, 500, PATH_IMAGE_TRAMPA_VIOLETA)
@@ -43,6 +43,9 @@ trampa_3 = Trampa_horizontal(POS_START_TRAMPA_3, SPEED_TRAMPA_3, 0, 200, PATH_IM
 trampa_4 = Trampa_vertical(POS_START_TRAMPA_4, SPEED_TRAMPA_4, 0, 250, PATH_IMAGE_TRAMPA_VIOLETA)
 trampa_5 = Trampa_vertical(POS_START_TRAMPA_5, SPEED_TRAMPA_5, 425, 625, PATH_IMAGE_TRAMPA_VIOLETA)
 trampa_6 = Trampa_vertical(POS_START_TRAMPA_6, SPEED_TRAMPA_6, 425, 625, PATH_IMAGE_TRAMPA_VIOLETA)
+trampa_7 = Trampa_vertical(POS_START_TRAMPA_7, SPEED_TRAMPA_7, 0, 125, PATH_IMAGE_TRAMPA_VIOLETA)
+trampa_8 = Trampa_vertical(POS_START_TRAMPA_8, SPEED_TRAMPA_8, 0, 125, PATH_IMAGE_TRAMPA_VIOLETA)
+trampa_9 = Trampa_vertical(POS_START_TRAMPA_9, SPEED_TRAMPA_9, 0, 125, PATH_IMAGE_TRAMPA_VIOLETA)
 
 item_1 = Item(POS_ITEM_1, PATH_IMAGE_BALL_1)
 item_2 = Item(POS_ITEM_2, PATH_IMAGE_BALL_1)
@@ -67,6 +70,7 @@ plataforma_11 = Platform(PATH_IMAGE_PLATAFORMA_3, POS_PLATAFORMA_11, SIZE_PLATAF
 plataforma_12 = Platform(PATH_IMAGE_PLATAFORMA_1, POS_PLATAFORMA_12, SIZE_PLATAFORMA_12)
 plataforma_13 = Platform(PATH_IMAGE_PLATAFORMA_1, POS_PLATAFORMA_13, SIZE_PLATAFORMA_13)
 plataforma_14 = Platform(PATH_IMAGE_PLATAFORMA_1, POS_PLATAFORMA_14, SIZE_PLATAFORMA_14)
+plataforma_15 = Platform(PATH_IMAGE_PLATAFORMA_1, POS_PLATAFORMA_15, SIZE_PLATAFORMA_15)
 
 lista_trampas = []
 lista_plataformas = []
@@ -90,6 +94,9 @@ lista_trampas.append(trampa_3)
 lista_trampas.append(trampa_4)
 lista_trampas.append(trampa_5)
 lista_trampas.append(trampa_6)
+lista_trampas.append(trampa_7)
+lista_trampas.append(trampa_8)
+lista_trampas.append(trampa_9)
 
 lista_plataformas.append(piso)
 lista_plataformas.append(plataforma_1)
@@ -106,6 +113,7 @@ lista_plataformas.append(plataforma_11)
 lista_plataformas.append(plataforma_12)
 lista_plataformas.append(plataforma_13)
 lista_plataformas.append(plataforma_14)
+lista_plataformas.append(plataforma_15)
 #podria hacer lo de la lista de las plataformas afuera, para que quede mas vacio el main
 
 proyectiles = pygame.sprite.Group()
@@ -186,6 +194,18 @@ while run:
     trampa_6.controlar_ruta()
     trampa_6.mover()
     trampa_6.render(screen)
+    
+    trampa_7.controlar_ruta()
+    trampa_7.mover()
+    trampa_7.render(screen)
+    
+    trampa_8.controlar_ruta()
+    trampa_8.mover()
+    trampa_8.render(screen)
+    
+    trampa_9.controlar_ruta()
+    trampa_9.mover()
+    trampa_9.render(screen)
     
     item_1.render(screen)
     item_2.render(screen)

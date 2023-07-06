@@ -26,23 +26,23 @@ def obtener_rectangulos(principal: pygame.Rect) -> dict:
     return diccionario
 
 
-player_quieto_derecha = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_stay_r_1.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_stay_r_2.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_stay_r_3.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_stay_r_4.png")]
+player_quieto_derecha = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_stay_r_1.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_stay_r_2.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_stay_r_3.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_stay_r_4.png")]
 
-player_camina_derecha = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_walk_r_1.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_walk_r_2.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_walk_r_3.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_walk_r_4.png")]
+player_camina_derecha = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_walk_r_1.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_walk_r_2.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_walk_r_3.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_walk_r_4.png")]
 
-player_salta_derecha = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_jump_r_1.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_jump_r_2.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_jump_r_3.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_jump_r_4.png"),
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_jump_r_5.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_jump_r_6.png"), 
-                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku_jump_r_7.png")]
+player_salta_derecha = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_jump_r_1.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_jump_r_2.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_jump_r_3.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_jump_r_4.png"),
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_jump_r_5.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_jump_r_6.png"), 
+                pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_jump_r_7.png")]
 
 player_ataque_derecha = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_fire_r_0.png"),
                         pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_fire_r_1.png"),

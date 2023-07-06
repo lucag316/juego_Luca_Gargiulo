@@ -59,16 +59,17 @@ SIZE_PLATAFORMA_1 = (50, 25)
 SIZE_PLATAFORMA_2 = (1000, 25)
 SIZE_PLATAFORMA_3 = (100, 25)
 SIZE_PLATAFORMA_4 = (1000, 25)
-SIZE_PLATAFORMA_5 = (100, 25)
-SIZE_PLATAFORMA_6 = (100, 25)
-SIZE_PLATAFORMA_7 = (25, 275)
+SIZE_PLATAFORMA_5 = (75, 25)
+SIZE_PLATAFORMA_6 = (75, 25)
+SIZE_PLATAFORMA_7 = (25, 250)
 SIZE_PLATAFORMA_8 = (800, 25)
-SIZE_PLATAFORMA_9 = (100, 25)
+SIZE_PLATAFORMA_9 = (50, 25)
 SIZE_PLATAFORMA_10 = (25, 150)
 SIZE_PLATAFORMA_11 = (400, 25)
 SIZE_PLATAFORMA_12 = (50, 25)
 SIZE_PLATAFORMA_13 = (100, 25)
 SIZE_PLATAFORMA_14 = (100, 25)
+SIZE_PLATAFORMA_15 = (75, 25)
 #----------------------TAMAÑOS-------------------------------
 
 #--------------------VELOCIDADES----------------------------
@@ -82,6 +83,9 @@ SPEED_TRAMPA_3 = 3
 SPEED_TRAMPA_4 = 10
 SPEED_TRAMPA_5 = 5
 SPEED_TRAMPA_6 = 5
+SPEED_TRAMPA_7 = 2
+SPEED_TRAMPA_8 = 2
+SPEED_TRAMPA_9 = 2
 
 SPEED_BALL = 6
 SPEED_PROJECTILE = 7
@@ -93,8 +97,8 @@ SPEED_BOLA_ENERGIA = 7
 
 POS_SCORE = (25, 25)
 POS_START_PLAYER = (WIDTH // 2, HEIGHT - 100)
-POS_START_FREEZER = (100, 80)
-POS_START_CELL = (200, 235)
+POS_START_FREEZER = (650, 80)
+POS_START_CELL = (250, 235)
 
 POS_PISO = (0, 650)
 
@@ -106,12 +110,13 @@ POS_PLATAFORMA_5 = (0, 375)
 POS_PLATAFORMA_6 = (0, 550)
 POS_PLATAFORMA_7 = (200, 325)
 POS_PLATAFORMA_8 = (225, 400)
-POS_PLATAFORMA_9 = (1100, 475)
+POS_PLATAFORMA_9 = (1150, 475)
 POS_PLATAFORMA_10 = (1000, 425)
 POS_PLATAFORMA_11 = (500, 500)
 POS_PLATAFORMA_12 = (1025, 550)
 POS_PLATAFORMA_13 = (350, 550)
 POS_PLATAFORMA_14 = (1100, 75)
+POS_PLATAFORMA_15 = (25, 250)
 
 POS_ITEM_1 = (50, 50)
 POS_ITEM_2 = (250, 350)
@@ -123,10 +128,13 @@ POS_ITEM_7 = (25, 600)
 
 POS_START_TRAMPA_1 = (0, 625)
 POS_START_TRAMPA_2 = (1025, 325)
-POS_START_TRAMPA_3 = (0, 250)
+POS_START_TRAMPA_3 = (0, 275)
 POS_START_TRAMPA_4 = (1025, 250)
 POS_START_TRAMPA_5 = (450, 625)
 POS_START_TRAMPA_6 = (900, 625)
+POS_START_TRAMPA_7 = (200, 0)
+POS_START_TRAMPA_8 = (400, 125)
+POS_START_TRAMPA_9 = (600, 0)
 
 
 
@@ -137,11 +145,11 @@ POS_START_TRAMPA_6 = (900, 625)
 
 
 #------------------------------------PATHS----------------------------------------------
-PATH_IMAGE_BACKGROUND = "./juego_Luca_Gargiulo/assets/images/fondo1.png"
-PATH_IMAGE_ICON = "./juego_Luca_Gargiulo/assets/images/icon.png"
-PATH_IMAGE_PLAYER = "./juego_Luca_Gargiulo/assets/images/goku.png"
+PATH_IMAGE_BACKGROUND = "./juego_Luca_Gargiulo/assets/images/fondos/fondo_1.png"
+PATH_IMAGE_ICON = "./juego_Luca_Gargiulo/assets/images/iconos/icon.png"
 
-PATH_IMAGE_PROJECTILE = "./juego_Luca_Gargiulo/assets/images/bomba.png"
+
+PATH_IMAGE_PROJECTILE = "./juego_Luca_Gargiulo/assets/images/disparos/bomba.png"
 PATH_IMAGE_BOLA_ENERGIA = "./juego_Luca_Gargiulo/assets/images/disparos/bola.png"
 
 PATH_IMAGE_TRAMPA_VIOLETA = "./juego_Luca_Gargiulo/assets/images/trampas/0.png"
@@ -161,7 +169,7 @@ PATH_FONT_DBZ = "./juego_Luca_Gargiulo/assets/fonts/fuente_dbz.ttf"
 #------------------------------------PATHS----------------------------------------------
 
 
-DEBUG = False   # podria  hacer un modo que si lo cambio me muestre todos los  rectangulos  
+DEBUG = True   # podria  hacer un modo que si lo cambio me muestre todos los  rectangulos  
 GAME_TITTLE = "Dragon Ball Z"
 
 DIRECTION_LEFT = "izquierda"
