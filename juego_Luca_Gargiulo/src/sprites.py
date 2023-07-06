@@ -2,7 +2,6 @@ import pygame
 
 #from manipular_imagenes import Manipular_imagenes
 
-
 def girar_imagenes(lista_original, flip_x, flip_y):
         lista_girada = []
         for imagen in lista_original:
@@ -15,7 +14,7 @@ def reescalar_imagenes(lista_animaciones, w, h):
         for i in range(len(lista)):
             imagen = lista[i]
             lista[i] = pygame.transform.scale(imagen, (w, h ))
-            
+    
 def obtener_rectangulos(principal: pygame.Rect) -> dict:
     diccionario = {}
     diccionario["main"] = principal
@@ -101,12 +100,6 @@ cell_camina_izquierda = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/
 cell_camina_derecha = girar_imagenes(cell_camina_izquierda, True, False)
 
 lista_animaciones_cell = [cell_camina_izquierda, cell_camina_derecha]
-
-
-
-
-
-
 
 
 reescalar_imagenes(lista_animaciones_player, 50, 50)
