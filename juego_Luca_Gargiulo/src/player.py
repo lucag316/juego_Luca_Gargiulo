@@ -1,11 +1,13 @@
 import pygame
-
+import sys
+import time
 from config import *
 from sprites import *
 from projectile import Projectile
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, posicion_inicial: tuple, speed_walk: int, speed_run: int, gravity: int, potencia_salto: int, frame_rate_ms: int, move_rate_ms: int, jump_height: int, screen: pygame.Surface, interval_time_jump = 100) -> None:
+        super().__init__()
         self.screen = screen
         
         self.stay_r = player_quieto_derecha
@@ -16,6 +18,8 @@ class Player(pygame.sprite.Sprite):
         self.jump_l = player_salta_izquierda
         self.atack_r = player_ataque_derecha
         self.atack_l = player_ataque_izquierda
+        self.hit_r = player_golpeado_derecha
+        self.hit_l = player_golpeado_izquierda
         
         self.move_x = 0
         self.move_y = 0
@@ -24,8 +28,10 @@ class Player(pygame.sprite.Sprite):
         self.speed_y = 0
         
         self.frame = 0
+        
         self.lives = 3
         self.score = 0
+        self.corazon = "foto de corazones"
         
         self.animation = self.stay_r
         self.image = self.animation[self.frame]
@@ -62,11 +68,48 @@ class Player(pygame.sprite.Sprite):
         self.sonido_proyectil = pygame.mixer.Sound(PATH_PUNCH_SOUND)
         self.derecha = True
         
+        #self.fall_count = 0
+        self.hit = False
+        self.hit_count = 0
+        
+        self.retrazo_disparo = 1000
+        self.ultimo_disparo = pygame.time.get_ticks()
+        
+        self.last_shot = 0
+        
+        self.gano = False
+        self.esta_vivo = True
         
         
-        self.fall_count = 0
         
         
+
+    def make_hit(self):
+            self.hit = True
+            self.hit_count = 0
+# self.loop() #en do movement
+    
+#     def loop(self):
+#         if self.hit:
+#             self.hit_count += 1
+#         if self.hit_count > FPS *2:
+#             self.hit = False
+#             self.hit_count = 0
+#     # def loop(self, fps):
+#     #     self.move_y += min((10, self.fall_count / fps) * self.gravity)
+#     #     self.fall_count += 1
+    
+#     # def landed(self):
+#     #     self.fall_count = 0
+#     #     self.move_y = 0
+    
+#     # def hit_head(self):
+#     #     self.count = 0
+#     #     self.move_y *= -1
+# self.morir()
+#                 self.make_hit()
+#                 self.hitting()
+
     def crear_rectangulos(self):
         self.rect_right = pygame.Rect(self.rect.right -10, self.rect.top, 10, self.rect.height)
         self.rect_left = pygame.Rect(self.rect.left, self.rect.top,10, self.rect.height)
@@ -74,15 +117,38 @@ class Player(pygame.sprite.Sprite):
         self.rect_bottom = pygame.Rect(self.rect.left, self.rect.bottom -10, self.rect.width, 10)
         self.lados = [self.rect, self.rect_bottom, self.rect_left, self.rect_right, self.rect_top]
     
-    #  def disparar(self,slave):
-    #     bala = Disparo(self.rect.x,self.rect.y,slave,r"RECURSOS\bola de fuego.png", self.posicion)
-    #     pygame.mixer.Sound(r"RECURSOS\disparo.wav").play()
-    #     self.lista_proyectiles.append(bala)
+    def change_x(self, delta_x):
+        # mueve todos los rectangulos en x, en esto se alteran las coordenadas de los rectangulos
+        self.rect.x += delta_x
+        self.ground_collition_rect.x += delta_x
+        self.rect_right.x += delta_x
+        self.rect_left.x += delta_x
+        self.rect_top.x += delta_x
+        self.rect_bottom.x += delta_x
+        # for lado in self.lados:
+        #     lado.x += delta_x
+        # puedo hacer uno del cuerpo
     
-    def disparar(self, proyectil):
-        proyectil = Projectile(PATH_IMAGE_BOLA_ENERGIA, SIZE_BOLA_ENERGIA, SPEED_PROJECTILE, self.rect.x, self.rect.y, self.direction, self.screen )
-        #self.sonido_proyectil.play()
-        self.lista_proyectiles.append(proyectil)
+    def change_y(self, desplazamiento_y):
+        # mueve todos los rectangulos en y
+        self.rect.y += desplazamiento_y
+        self.ground_collition_rect.y += desplazamiento_y
+        self.rect_right.y += desplazamiento_y
+        self.rect_left.y += desplazamiento_y
+        self.rect_top.y += desplazamiento_y
+        self.rect_bottom.y += desplazamiento_y
+        # for lado in self.lados:
+        #     lado.y += delta_y
+    
+    def disparar(self, proyectiles):
+        current_time = time.time()
+        elapsed_time = current_time - self.last_shot
+        if elapsed_time >= 3:
+            proyectil = Projectile(PATH_IMAGE_BOLA_ENERGIA, SIZE_BOLA_ENERGIA, SPEED_PROJECTILE, self.rect.x, self.rect.y, self.direction, self.screen )
+            #self.sonido_proyectil.play()
+            self.lista_proyectiles.append(proyectil)
+            self.last_shot = current_time
+            #proyectiles.add(proyectil)
     
     def staying(self):
         if self.is_shooting:
@@ -150,29 +216,77 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.animation = self.atack_l  
 
-    def change_x(self, delta_x):
-        # mueve todos los rectangulos en x, en esto se alteran las coordenadas de los rectangulos
-        self.rect.x += delta_x
-        self.ground_collition_rect.x += delta_x
-        self.rect_right.x += delta_x
-        self.rect_left.x += delta_x
-        self.rect_top.x += delta_x
-        self.rect_bottom.x += delta_x
-        # for lado in self.lados:
-        #     lado.x += delta_x
-        # puedo hacer uno del cuerpo
+    def hitting(self):
+        if self.hit:
+            if self.animation != self.hit_r or self.animation != self.hit_l:
+                self.frame = 0
+                if self.direction == DIRECTION_RIGHT:
+                    self.animation = self.hit_r
+                else:
+                    self.animation = self.hit_l
+                self.frame = 0
+
+    def is_on_platform(self, lista_plataformas):
+        retorno = False
+        if self.rect.y >= GROUND_LEVEL:
+            retorno = True
+        else:
+            for plataforma in lista_plataformas:
+                if self.rect_bottom.colliderect(plataforma.rect_top):
+                    #self.rect_bottom = plataforma.rect_top #probe pero no hace nada
+                    retorno = True
+                    break
+        
+        return retorno
     
-    def change_y(self, desplazamiento_y):
-        # mueve todos los rectangulos en y
-        self.rect.y += desplazamiento_y
-        self.ground_collition_rect.y += desplazamiento_y
-        self.rect_right.y += desplazamiento_y
-        self.rect_left.y += desplazamiento_y
-        self.rect_top.y += desplazamiento_y
-        self.rect_bottom.y += desplazamiento_y
-        # for lado in self.lados:
-        #     lado.y += delta_y
+    def aplicar_gravedad(self):
+        #salto
+        #caida
+        #algo mas
+        pass
     
+    def morir(self):
+        pass
+
+    def collition(self, lista_plataformas, lista_trampas, lista_enemigos, lista_items):
+
+        for plataforma in lista_plataformas:
+            if self.rect_top.colliderect(plataforma.rect_bottom):
+                #self.rect_top.y = plataforma.rect_bottom.y
+                self.move_y = 0
+                #self.change_y(self.move_y) # no se si es lo mismo hacer  esto, funciona igual creo
+            if self.rect_left.colliderect(plataforma.rect_right):
+                self.move_x = 1
+            elif self.rect_right.colliderect(plataforma.rect_left):
+                self.move_x = 0
+        
+        for enemigo in lista_enemigos:
+            for proyectil in self.lista_proyectiles:
+                if enemigo.lives > 0 and proyectil.rect.colliderect(enemigo.rect):
+                    enemigo.lives = 0
+                    self.score += 3
+            if self.rect_left.colliderect(enemigo.rect_right) or self.rect_right.colliderect(enemigo.rect_left):
+                self.lives -= 3
+                self.make_hit()
+                self.morir()
+                print("morir")
+        
+        for trampa in lista_trampas:
+            if trampa.activo and self.rect.colliderect(trampa.rect):
+                self.morir()
+                self.make_hit()
+                self.hitting()
+                trampa.activo = False
+                self.lives -= 1
+                print("sacar una vida")
+            
+        for item in lista_items:
+            if item.activo and self.rect.colliderect(item.rect):
+                pygame.mixer.Sound(PATH_PUNCH_SOUND).play()
+                item.activo = False
+                self.score += 1
+                print("sumar 1 punto")
+
     def do_movement(self, delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items):
         self.tiempo_transcurrido_move += delta_ms        # se acumula el tiempo
         
@@ -195,6 +309,7 @@ class Player(pygame.sprite.Sprite):
             
             self.collition(lista_plataformas, lista_trampas, lista_enemigos, lista_items)
             #self.loop(fps)
+
             
             if not self.is_on_platform(lista_plataformas):
                 if self.move_y == 0:
@@ -204,38 +319,7 @@ class Player(pygame.sprite.Sprite):
                 if self.is_jumping: #sacar
                     self.jumping(False)
                 self.is_falling = False
-    
-    # def loop(self, fps):
-    #     self.move_y += min((10, self.fall_count / fps) * self.gravity)
-    #     self.fall_count += 1
-    
-    # def landed(self):
-    #     self.fall_count = 0
-    #     self.move_y = 0
-    
-    # def hit_head(self):
-    #     self.count = 0
-    #     self.move_y *= -1
-    
-    def is_on_platform(self, lista_plataformas):
-        retorno = False
-        if self.rect.y >= GROUND_LEVEL:
-            retorno = True
-        else:
-            for plataforma in lista_plataformas:
-                if self.rect_bottom.colliderect(plataforma.rect_top):
-                    #self.rect_bottom = plataforma.rect_top #probe pero no hace nada
-                    retorno = True
-                    break
-        
-        return retorno
-    
-    def aplicar_gravedad(self):
-        #salto
-        #caida
-        #algo mas
-        pass
-    
+
     def do_animation(self, delta_ms):
         self.tiempo_transcurrido_animation += delta_ms        # se acumula el tiempo
         
@@ -247,58 +331,48 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.frame = 0
 
-    def morir(self):
+    def mostrar_vidas(self):
+        if self.lives >= 1:
+            self.screen.blit("imagen corazon", (0, 0))
+        if self.lives >= 2:
+            self.screen.blit("imagen corazon", (50, 0))
+        if self.lives >= 2:
+            self.screen.blit("imagen corazon", (100, 0))
+
+    def ganar(self, lista_items):
+        flag = True
+        for item in lista_items:
+            if item.activo:
+                flag = False
+        if flag:
+            self.gano = True
+    
+    def verificar_muerte(self):
+        if self.lives <= 0:
+            self.esta_vivo = False
+            self.is_game_over = True
+    
+    def actualizar_puntos(self):
         pass
 
-    def collition(self, lista_plataformas, lista_trampas, lista_enemigos, lista_items):
-        for plataforma in lista_plataformas:
-            if self.rect_top.colliderect(plataforma.rect_bottom):
-                #self.rect_top.y = plataforma.rect_bottom.y
-                self.move_y = 0
-                
-                #self.change_y(self.move_y) # no se si es lo mismo hacer  esto, funciona igual creo
-            if self.rect_left.colliderect(plataforma.rect_right):
-                self.move_x = 1
-                #self.move_x = 0
-            elif self.rect_right.colliderect(plataforma.rect_left):
-                self.move_x = 0
-
-            # elif self.rect_left.colliderect(plataforma.rect_right) and self.rect_top.colliderect(plataforma.rect_right):
-            #     self.move_x = 0
-        for enemigo in lista_enemigos:
-            if self.rect.colliderect(enemigo.rect):
-                self.morir()
-                print("morir")
-        
-        for trampa in lista_trampas:
-            if self.rect.colliderect(trampa.rect):
-                self.morir()
-                print("sacar una vida")
-        
-        for item in lista_items:
-            if self.rect.colliderect(item.rect):
-                self.morir()
-                print("sumar 1 punto")
-
     def update(self, delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items):
-        #self.collition(lista_plataformas, lista_trampas)
-        self.do_movement(delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items)
-        self.do_animation(delta_ms)
+        if self.esta_vivo:
+            self.do_movement(delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items)
+            self.do_animation(delta_ms)
+            self.verificar_muerte()
+            self.ganar(lista_items)
     
     def render(self, screen: pygame.Surface):
-        if DEBUG:
-            pygame.draw.rect(screen, BLUE, self.rect)
-            #pygame.draw.rect(screen, GREEN, self.ground_collition_rect)
-            pygame.draw.rect(screen, RED, self.rect_right, 2)
-            pygame.draw.rect(screen, RED, self.rect_left, 2)
-            pygame.draw.rect(screen, RED, self.rect_top, 2)
-            pygame.draw.rect(screen, RED, self.rect_bottom, 2)
-            
-            # for lado in self.lados:
-            #     pygame.draw.rect(screen, ORANGE, lado, 2)
+        if self.esta_vivo:
+            if DEBUG:
+                pygame.draw.rect(screen, BLUE, self.rect)
+                pygame.draw.rect(screen, RED, self.rect_right, 2)
+                pygame.draw.rect(screen, RED, self.rect_left, 2)
+                pygame.draw.rect(screen, RED, self.rect_top, 2)
+                pygame.draw.rect(screen, RED, self.rect_bottom, 2)
 
-        self.image = self.animation[self.frame]
-        screen.blit(self.image, self.rect)
+            self.image = self.animation[self.frame]
+            screen.blit(self.image, self.rect)
     
     def imputs(self, keys, delta_ms):
         self.tiempo_transcurrido += delta_ms
@@ -321,11 +395,26 @@ class Player(pygame.sprite.Sprite):
         
         if not keys[pygame.K_SPACE]:    # aca no se si es not o o pero no se muestra de ninguna forma
             self.shooting(False)
+    
+    def events(self):
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_SPACE:
+                    self.disparar(self.lista_proyectiles)
+                
+            elif evento.type == pygame.KEYUP:
+                if evento.key == pygame.K_SPACE:
+                    self.disparar(self.lista_proyectiles)
 
 
 
 
-# import pygame
+
+
+
 
 # from config import *
 # from sprites import *

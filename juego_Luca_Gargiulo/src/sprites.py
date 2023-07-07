@@ -50,13 +50,25 @@ player_ataque_derecha = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/
                         pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_fire_r_3.png"),
                         pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_fire_r_4.png")]
 
+player_golpeado_derecha = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_hit_r_1.png"),
+                        pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_hit_r_2.png"),
+                        pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_hit_r_3.png"),
+                        pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_hit_r_4.png"),
+                        pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_hit_r_5.png"),
+                        pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_hit_r_6.png"),
+                        pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_hit_r_7.png"),
+                        pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_hit_r_8.png"),
+                        pygame.image.load("./juego_Luca_Gargiulo/assets/images/goku/goku_hit_r_9.png"),]
+
 player_quieto_izquierda = girar_imagenes(player_quieto_derecha, True, False)
 player_camina_izquierda = girar_imagenes(player_camina_derecha, True, False)
 player_salta_izquierda = girar_imagenes(player_salta_derecha, True, False)
 player_ataque_izquierda = girar_imagenes(player_ataque_derecha, True, False)
+player_golpeado_izquierda = girar_imagenes(player_golpeado_derecha, True, False)
 
 lista_animaciones_player = [player_quieto_derecha, player_quieto_izquierda, player_camina_derecha, player_camina_izquierda, 
-                            player_salta_derecha, player_salta_izquierda, player_ataque_derecha, player_ataque_izquierda]
+                            player_salta_derecha, player_salta_izquierda, player_ataque_derecha, player_ataque_izquierda,
+                            player_golpeado_derecha, player_golpeado_izquierda]
 
 
 freezer_quieto_izquierda = [pygame.image.load("./juego_Luca_Gargiulo/assets/images/freezer/frieza_0.png"),

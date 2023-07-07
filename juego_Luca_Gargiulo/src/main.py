@@ -29,23 +29,27 @@ screen = pygame.display.set_mode(SIZE_SCREEN)
 pygame.display.set_caption(GAME_TITTLE)
 icon = pygame.transform.scale(pygame.image.load(PATH_IMAGE_ICON).convert_alpha(), SIZE_ICON)
 pygame.display.set_icon(icon)
-background = pygame.transform.scale(pygame.image.load(PATH_IMAGE_BACKGROUND).convert(), SIZE_SCREEN)
+background = pygame.transform.scale(pygame.image.load(PATH_IMAGE_BACKGROUND_4).convert(), SIZE_SCREEN)
 font = pygame.font.Font(PATH_FONT_DBZ, 48)
 
+score = 0
+sonido_item = pygame.mixer.Sound(PATH_PUNCH_SOUND)
+flag_item = True
+flag_sonido_item = True
 
 player = Player(POS_START_PLAYER, SPEED_PLAYER, SPEED_PLAYER * 2, GRAVITY_PLAYER, JUMP_POWER_PLAYER, FRAME_RATE_MS_PLAYER, MOVE_RATE_MS_PLAYER, JUMP_HEIGHT_PLAYER, screen)
-freezer = Freezer(POS_START_FREEZER, SPEED_FREEZER, 650, 900)
-cell = Cell(POS_START_CELL, SPEED_CELL,  250, 900)
+freezer = Freezer(POS_START_FREEZER, SPEED_FREEZER, 650, 900, screen, player.rect)
+cell = Cell(POS_START_CELL, SPEED_CELL,  250, 900, screen, player.rect)
 
-trampa_1 = Trampa_horizontal(POS_START_TRAMPA_1, SPEED_TRAMPA_1, 0, 1175, PATH_IMAGE_TRAMPA_VIOLETA)
-trampa_2 = Trampa_vertical(POS_START_TRAMPA_2, SPEED_TRAMPA_2, 325, 500, PATH_IMAGE_TRAMPA_VIOLETA)
-trampa_3 = Trampa_horizontal(POS_START_TRAMPA_3, SPEED_TRAMPA_3, 0, 200, PATH_IMAGE_TRAMPA_VIOLETA)
-trampa_4 = Trampa_vertical(POS_START_TRAMPA_4, SPEED_TRAMPA_4, 0, 250, PATH_IMAGE_TRAMPA_VIOLETA)
-trampa_5 = Trampa_vertical(POS_START_TRAMPA_5, SPEED_TRAMPA_5, 425, 625, PATH_IMAGE_TRAMPA_VIOLETA)
-trampa_6 = Trampa_vertical(POS_START_TRAMPA_6, SPEED_TRAMPA_6, 425, 625, PATH_IMAGE_TRAMPA_VIOLETA)
-trampa_7 = Trampa_vertical(POS_START_TRAMPA_7, SPEED_TRAMPA_7, 0, 125, PATH_IMAGE_TRAMPA_VIOLETA)
-trampa_8 = Trampa_vertical(POS_START_TRAMPA_8, SPEED_TRAMPA_8, 0, 125, PATH_IMAGE_TRAMPA_VIOLETA)
-trampa_9 = Trampa_vertical(POS_START_TRAMPA_9, SPEED_TRAMPA_9, 0, 125, PATH_IMAGE_TRAMPA_VIOLETA)
+trampa_1 = Trampa_horizontal(POS_START_TRAMPA_1, SPEED_TRAMPA_1, 0, 1175, PATH_IMAGE_TRAMPA_VIOLETA, screen)
+trampa_2 = Trampa_vertical(POS_START_TRAMPA_2, SPEED_TRAMPA_2, 325, 500, PATH_IMAGE_TRAMPA_VIOLETA, screen)
+trampa_3 = Trampa_horizontal(POS_START_TRAMPA_3, SPEED_TRAMPA_3, 0, 200, PATH_IMAGE_TRAMPA_VIOLETA, screen)
+trampa_4 = Trampa_vertical(POS_START_TRAMPA_4, SPEED_TRAMPA_4, 0, 250, PATH_IMAGE_TRAMPA_VIOLETA, screen)
+trampa_5 = Trampa_vertical(POS_START_TRAMPA_5, SPEED_TRAMPA_5, 425, 625, PATH_IMAGE_TRAMPA_VIOLETA, screen)
+trampa_6 = Trampa_vertical(POS_START_TRAMPA_6, SPEED_TRAMPA_6, 425, 625, PATH_IMAGE_TRAMPA_VIOLETA, screen)
+trampa_7 = Trampa_vertical(POS_START_TRAMPA_7, SPEED_TRAMPA_7, 0, 125, PATH_IMAGE_TRAMPA_VIOLETA, screen)
+trampa_8 = Trampa_vertical(POS_START_TRAMPA_8, SPEED_TRAMPA_8, 0, 125, PATH_IMAGE_TRAMPA_VIOLETA, screen)
+trampa_9 = Trampa_vertical(POS_START_TRAMPA_9, SPEED_TRAMPA_9, 0, 125, PATH_IMAGE_TRAMPA_VIOLETA, screen)
 
 item_1 = Item(POS_ITEM_1, PATH_IMAGE_BALL_1)
 item_2 = Item(POS_ITEM_2, PATH_IMAGE_BALL_1)
@@ -116,106 +120,151 @@ lista_plataformas.append(plataforma_14)
 lista_plataformas.append(plataforma_15)
 #podria hacer lo de la lista de las plataformas afuera, para que quede mas vacio el main
 
-proyectiles = pygame.sprite.Group()
-
 run = True
 
+is_running = False
+is_playing = False
+is_game_over = False
 
-while run:
-    reloj.tick(FPS)
-    for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        elif evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_SPACE:
-                player.disparar(proyectiles)
-            
-        elif evento.type == pygame.KEYUP:
-            if evento.key == pygame.K_SPACE:
-                player.disparar(proyectiles)
-    
-    keys = pygame.key.get_pressed()
-    
-    delta_ms = reloj.tick(FPS)
-    screen.blit(background, ORIGIN)
-    
-    if len(player.lista_proyectiles) > 0:
-        for proyectil in player.lista_proyectiles:
-            proyectil.render()
-            proyectil.trayectoria()
-            
-            if proyectil.rect.x <= DISPLAY_LEFT or proyectil.rect.x >= DISPLAY_RIGHT:
-                player.lista_proyectiles.remove(proyectil)
-            
-    # proyectil.trayectoria()
-    # proyectil.render(screen)
-    
-    for plataforma in lista_plataformas:
-        plataforma.render(screen)
-    
-    player.imputs(keys, delta_ms)
-    player.update(delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items) # delta_ms el tiempo que habia transcurrido desde la ultima vez de reloj.tick
-    player.render(screen)
-    
-    freezer.controlar_ruta()
-    freezer.update()
-    freezer.mover()
-    freezer.render(screen)
-    freezer.colicion(player.rect)
-    
-    cell.controlar_ruta()
-    cell.update()
-    cell.mover()
-    cell.render(screen)
-    cell.colicion(player.rect)
-    
-    trampa_1.controlar_ruta()
-    trampa_1.mover()
-    trampa_1.render(screen)
-    #trampa_1.collition(player.rect)
 
-    trampa_2.controlar_ruta()
-    trampa_2.mover()
-    trampa_2.render(screen)
+def game_over():
+    # self.stop_elements()       # podria ser un boton de pausa
+    is_playing = False
+    is_game_over = True
 
-    trampa_3.controlar_ruta()
-    trampa_3.mover()
-    trampa_3.render(screen)
-    
-    trampa_4.controlar_ruta()
-    trampa_4.mover()
-    trampa_4.render(screen)
-    
-    trampa_5.controlar_ruta()
-    trampa_5.mover()
-    trampa_5.render(screen)
-    
-    trampa_6.controlar_ruta()
-    trampa_6.mover()
-    trampa_6.render(screen)
-    
-    trampa_7.controlar_ruta()
-    trampa_7.mover()
-    trampa_7.render(screen)
-    
-    trampa_8.controlar_ruta()
-    trampa_8.mover()
-    trampa_8.render(screen)
-    
-    trampa_9.controlar_ruta()
-    trampa_9.mover()
-    trampa_9.render(screen)
-    
-    item_1.render(screen)
-    item_2.render(screen)
-    item_3.render(screen)
-    item_4.render(screen)
-    item_5.render(screen)
-    item_6.render(screen)
-    item_7.render(screen)
+def show_start_screen():
+    flag = True
+        
+    while flag:
+        reloj.tick(FPS)
+        for evento in pygame.event.get():
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_s:
+                    flag = False
+        
+        fondo_game_over = pygame.surface.Surface(SIZE_SCREEN)
+        fondo_game_over.fill(BLACK)
+        texto = font.render("Presione S para comenzar", True, (WHITE))
+        texto_rect = texto.get_rect()
+        texto_rect.center = CENTER
+        
+        screen.blit(fondo_game_over, ORIGIN)
+        screen.blit(texto, texto_rect)
+        pygame.display.flip()
+
+    #self.restart_game()
+
+def show_game_over_screen():
+        fondo_game_over = pygame.surface.Surface(SIZE_SCREEN)
+        fondo_game_over.fill(BLACK)
+        texto = font.render("Game Over", True, (WHITE))
+        texto_rect = texto.get_rect()
+        texto_rect.center = CENTER
+        
+        screen.blit(fondo_game_over, ORIGIN)
+        screen.blit(texto, texto_rect)
+        
+        pygame.display.flip()       # esta mal, tiene que estar solo en el render. buscar otra solucion
+        pygame.time.delay(5000) # congela la pantalla por 5 segundos
+        
+        #self.restart_game()
+        #self.is_game_over = False
+        is_running = False
+
+
+def restart_game(self):
+
+        # self.score = 0
+        # self.sprites.empty()
+        # self.asteroides.empty()
+        # self.lasers.empty()
+        # self.nave.reset()
+        # self.sprites.add(self.nave)
+        
+        # self.play()
+    pass
+
+def play():
+    is_running = True
+    is_playing = True
+    is_game_over = False
+
+    while run:
+        reloj.tick(FPS)
+
+        keys = pygame.key.get_pressed()
+        
+        delta_ms = reloj.tick(FPS)
+        screen.blit(background, ORIGIN)
+        
+        if len(player.lista_proyectiles) > 0:
+            for proyectil in player.lista_proyectiles:
+                proyectil.render()
+                proyectil.trayectoria()
+                
+                if proyectil.rect.x <= DISPLAY_LEFT or proyectil.rect.x >= DISPLAY_RIGHT:
+                    player.lista_proyectiles.remove(proyectil)
+
+        for plataforma in lista_plataformas:
+            plataforma.render(screen)
+        
+        player.imputs(keys, delta_ms)
+        player.events()
+        player.update(delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items) # delta_ms el tiempo que habia transcurrido desde la ultima vez de reloj.tick
+        player.render(screen)
+        
+        freezer.update_all()
+        cell.update_all()
+        
+        trampa_1.update_all()
+        trampa_2.update_all()
+        trampa_3.update_all()
+        trampa_4.update_all()
+        trampa_5.update_all()
+        trampa_6.update_all()
+        trampa_7.update_all()
+        trampa_8.update_all()
+        trampa_9.update_all()
+        
+        item_1.render(screen)
+        item_2.render(screen)
+        item_3.render(screen)
+        item_4.render(screen)
+        item_5.render(screen)
+        item_6.render(screen)
+        item_7.render(screen)
+        
+        pygame.display.flip()
+        
+    show_start_screen()
+
+
+
+def render():
+    # juego / inicio / game over
+    if is_game_over:
+        show_game_over_screen()
+    elif is_playing:
+        screen.blit(background, ORIGIN)
+        play()
+    else:
+        show_start_screen()
     
     pygame.display.flip()
+
+
+
+play()
+
+
+
+
+
+
+
+
+
+
 
 
 

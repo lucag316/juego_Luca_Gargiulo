@@ -145,7 +145,12 @@ POS_START_TRAMPA_9 = (600, 0)
 
 
 #------------------------------------PATHS----------------------------------------------
-PATH_IMAGE_BACKGROUND = "./juego_Luca_Gargiulo/assets/images/fondos/fondo_1.png"
+PATH_IMAGE_BACKGROUND_1 = "./juego_Luca_Gargiulo/assets/images/fondos/fondo_1.jpg"
+PATH_IMAGE_BACKGROUND_2 = "./juego_Luca_Gargiulo/assets/images/fondos/fondo_2.jpg"
+PATH_IMAGE_BACKGROUND_3 = "./juego_Luca_Gargiulo/assets/images/fondos/fondo_3.jpg"
+PATH_IMAGE_BACKGROUND_4 = "./juego_Luca_Gargiulo/assets/images/fondos/fondo_4.jpg"
+PATH_IMAGE_BACKGROUND_5 = "./juego_Luca_Gargiulo/assets/images/fondos/fondo_5.jpg"
+PATH_IMAGE_BACKGROUND_MENU = "./juego_Luca_Gargiulo/assets/images/fondos/fondo_menu.jpg"
 PATH_IMAGE_ICON = "./juego_Luca_Gargiulo/assets/images/iconos/icon.png"
 
 
@@ -169,7 +174,7 @@ PATH_FONT_DBZ = "./juego_Luca_Gargiulo/assets/fonts/fuente_dbz.ttf"
 #------------------------------------PATHS----------------------------------------------
 
 
-DEBUG = True   # podria  hacer un modo que si lo cambio me muestre todos los  rectangulos  
+DEBUG = False   # podria  hacer un modo que si lo cambio me muestre todos los  rectangulos  
 GAME_TITTLE = "Dragon Ball Z"
 
 DIRECTION_LEFT = "izquierda"

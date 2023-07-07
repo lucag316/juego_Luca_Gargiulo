@@ -4,12 +4,14 @@ from sprites import *
 from config import *
 
 class EnemyBase(pygame.sprite.Sprite):
-    def __init__(self, posicion_inicial: tuple, speed: int, animation) -> None:
+    def __init__(self, posicion_inicial: tuple, speed: int, animation, screen: pygame.Surface, player_rect: pygame.Rect) -> None:
         #self.screen = screen
         # self.stay_r = freezer_quieto_derecha
         # self.stay_l = freezer_quieto_izquierda
         # self.walk_r = freezer_camina_derecha
         # self.walk_l = freezer_camina_izquierda
+        self.screen = screen
+        self.player_rect =  player_rect
         
         self.frame = 0
         self.animation = animation
@@ -24,7 +26,8 @@ class EnemyBase(pygame.sprite.Sprite):
         self.speed = speed
         self.direction = DIRECTION_RIGHT
         
-        self.vidas = 1
+        self.lives = 1
+        self.activo = True
     
     def crear_rectangulos(self):
         self.rect_right = pygame.Rect(self.rect.right -6, self.rect.top, 6, self.rect.height)
@@ -39,30 +42,31 @@ class EnemyBase(pygame.sprite.Sprite):
         else:
             self.frame = 0
     
-    def render(self, screen:pygame.Surface):
-        if self.vidas == 1:
+    def render(self):
+        if self.lives == 1:
             if DEBUG:
-                pygame.draw.rect(screen, YELLOW, self.rect)
-                pygame.draw.rect(screen, PINK, self.rect_right, 2)
-                pygame.draw.rect(screen, PINK, self.rect_left, 2)
-                pygame.draw.rect(screen, PINK, self.rect_top, 2)
-                pygame.draw.rect(screen, PINK, self.rect_bottom, 2)
+                pygame.draw.rect(self.screen, YELLOW, self.rect)
+                pygame.draw.rect(self.screen, PINK, self.rect_right, 2)
+                pygame.draw.rect(self.screen, PINK, self.rect_left, 2)
+                pygame.draw.rect(self.screen, PINK, self.rect_top, 2)
+                pygame.draw.rect(self.screen, PINK, self.rect_bottom, 2)
                 
             self.image = self.animation[self.frame]
-            screen.blit(self.image, self.rect)
+            self.screen.blit(self.image, self.rect)
     
-    def colicion(self, pos_xy):
-        if self.rect_top.colliderect(pos_xy):
-            self.vidas == 0
+    def colicion(self):
+        if self.rect_top.colliderect(self.player_rect):
+            self.lives == 0
 
 
 class Freezer(EnemyBase):
-    def __init__(self, posicion_inicial: tuple, speed: int, minimo_x: int, maximo_x: int) -> None:
+    def __init__(self, posicion_inicial: tuple, speed: int, minimo_x: int, maximo_x: int, screen: pygame.Surface, player_rect: pygame.Rect) -> None:
         self.stay_r = freezer_quieto_derecha
         self.stay_l = freezer_quieto_izquierda
         self.walk_r = freezer_camina_derecha
         self.walk_l = freezer_camina_izquierda
-        super().__init__(posicion_inicial, speed,self.walk_r)  # creo que esto es lo que le pasa a enemigo base
+        super().__init__(posicion_inicial, speed,self.walk_r, screen, player_rect)  # creo que esto es lo que le pasa a enemigo base
+        
         
         self.minimo_x = minimo_x
         self.maximo_x = maximo_x
@@ -88,13 +92,24 @@ class Freezer(EnemyBase):
         self.rect_left.x += self.move_x
         self.rect_top.x += self.move_x
         self.rect_bottom.x += self.move_x
+    
+    def update_all(self):
+        self.controlar_ruta()
+        self.update()
+        self.mover()
+        self.render()
+        self.colicion()
 
-
+# freezer.controlar_ruta()
+#     freezer.update()
+#     freezer.mover()
+#     freezer.render(screen)
+#     freezer.colicion(player.rect)
 class Cell(EnemyBase):
-    def __init__(self, posicion_inicial: tuple, speed: int, minimo_x: int, maximo_x: int) -> None:
+    def __init__(self, posicion_inicial: tuple, speed: int, minimo_x: int, maximo_x: int, screen: pygame.Surface, player_rect: pygame.Rect) -> None:
         self.walk_r = cell_camina_derecha
         self.walk_l = cell_camina_izquierda
-        super().__init__(posicion_inicial, speed,self.walk_r)  # creo que esto es lo que le pasa a enemigo base
+        super().__init__(posicion_inicial, speed,self.walk_r, screen, player_rect)  # creo que esto es lo que le pasa a enemigo base
         
         self.minimo_x = minimo_x
         self.maximo_x = maximo_x
@@ -120,3 +135,10 @@ class Cell(EnemyBase):
         self.rect_left.x += self.move_x
         self.rect_top.x += self.move_x
         self.rect_bottom.x += self.move_x
+    
+    def update_all(self):
+        self.controlar_ruta()
+        self.update()
+        self.mover()
+        self.render()
+        self.colicion()

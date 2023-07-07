@@ -16,12 +16,15 @@ class Item(pygame.sprite.Sprite):
         self.move_y = 0
         self.direction = DIRECTION_RIGHT
         
+        self.activo = True
+        
     
     def render(self, screen: pygame.Surface):
-        if DEBUG:
-            pygame.draw.rect(screen, WHITE, self.rect)
+        if self.activo:
+            if DEBUG:
+                pygame.draw.rect(screen, WHITE, self.rect)
         
-        screen.blit(self.image, self.rect)
+            screen.blit(self.image, self.rect)
     
     def collition(self):
         pass
