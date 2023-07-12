@@ -56,7 +56,7 @@ class EnemyBase(pygame.sprite.Sprite):
     
     def colicion(self):
         if self.rect_top.colliderect(self.player_rect):
-            self.lives == 0
+            self.lives -= 1
 
 
 class Freezer(EnemyBase):

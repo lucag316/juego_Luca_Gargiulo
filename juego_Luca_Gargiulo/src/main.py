@@ -234,6 +234,10 @@ def play():
         item_6.render(screen)
         item_7.render(screen)
         
+        if player.lives <= 0:
+            is_game_over = True
+            show_game_over_screen()
+        
         pygame.display.flip()
         
     show_start_screen()

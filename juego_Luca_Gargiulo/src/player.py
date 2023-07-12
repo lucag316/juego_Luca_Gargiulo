@@ -21,6 +21,9 @@ class Player(pygame.sprite.Sprite):
         self.hit_r = player_golpeado_derecha
         self.hit_l = player_golpeado_izquierda
         
+        self.posicion_inicial_x = posicion_inicial[0]
+        self.posicion_inicial_y = posicion_inicial[1]
+        
         self.move_x = 0
         self.move_y = 0
         self.speed_walk = speed_walk
@@ -31,13 +34,14 @@ class Player(pygame.sprite.Sprite):
         
         self.lives = 3
         self.score = 0
-        self.corazon = "foto de corazones"
+        self.score_viejo = 0
+        self.corazon = pygame.transform.scale( pygame.image.load(PATH_IMAGE_CORAZON).convert_alpha(), (25, 25))
         
         self.animation = self.stay_r
         self.image = self.animation[self.frame]
         self.rect = self.image.get_rect()
-        self.rect.x = posicion_inicial[0] # usar el  start_pos_player
-        self.rect.y = posicion_inicial[1]
+        self.rect.x = self.posicion_inicial_x # usar el  start_pos_player
+        self.rect.y = self.posicion_inicial_y
         self.crear_rectangulos()
         self.direction = DIRECTION_RIGHT
         
@@ -79,7 +83,6 @@ class Player(pygame.sprite.Sprite):
         
         self.gano = False
         self.esta_vivo = True
-        
         
         
         
@@ -140,7 +143,7 @@ class Player(pygame.sprite.Sprite):
         # for lado in self.lados:
         #     lado.y += delta_y
     
-    def disparar(self, proyectiles):
+    def disparar(self):
         current_time = time.time()
         elapsed_time = current_time - self.last_shot
         if elapsed_time >= 3:
@@ -246,7 +249,10 @@ class Player(pygame.sprite.Sprite):
         pass
     
     def morir(self):
-        pass
+        self.rect.x = self.posicion_inicial_x
+        self.rect.y = self.posicion_inicial_y
+        self.crear_rectangulos()
+        self.direction = DIRECTION_RIGHT
 
     def collition(self, lista_plataformas, lista_trampas, lista_enemigos, lista_items):
 
@@ -256,36 +262,34 @@ class Player(pygame.sprite.Sprite):
                 self.move_y = 0
                 #self.change_y(self.move_y) # no se si es lo mismo hacer  esto, funciona igual creo
             if self.rect_left.colliderect(plataforma.rect_right):
-                self.move_x = 1
+                self.move_x = 0
             elif self.rect_right.colliderect(plataforma.rect_left):
                 self.move_x = 0
         
         for enemigo in lista_enemigos:
             for proyectil in self.lista_proyectiles:
                 if enemigo.lives > 0 and proyectil.rect.colliderect(enemigo.rect):
-                    enemigo.lives = 0
+                    enemigo.lives -= 1 
                     self.score += 3
             if self.rect_left.colliderect(enemigo.rect_right) or self.rect_right.colliderect(enemigo.rect_left):
                 self.lives -= 3
-                self.make_hit()
-                self.morir()
-                print("morir")
+                #self.make_hit()
+                #print("morir")
         
         for trampa in lista_trampas:
             if trampa.activo and self.rect.colliderect(trampa.rect):
                 self.morir()
                 self.make_hit()
                 self.hitting()
-                trampa.activo = False
                 self.lives -= 1
-                print("sacar una vida")
-            
+                #print("sacar una vida")
+
         for item in lista_items:
             if item.activo and self.rect.colliderect(item.rect):
                 pygame.mixer.Sound(PATH_PUNCH_SOUND).play()
                 item.activo = False
                 self.score += 1
-                print("sumar 1 punto")
+                #print("sumar 1 punto")
 
     def do_movement(self, delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items):
         self.tiempo_transcurrido_move += delta_ms        # se acumula el tiempo
@@ -333,34 +337,36 @@ class Player(pygame.sprite.Sprite):
 
     def mostrar_vidas(self):
         if self.lives >= 1:
-            self.screen.blit("imagen corazon", (0, 0))
+            self.screen.blit(self.corazon, (0, 0))
         if self.lives >= 2:
-            self.screen.blit("imagen corazon", (50, 0))
-        if self.lives >= 2:
-            self.screen.blit("imagen corazon", (100, 0))
+            self.screen.blit(self.corazon, (50, 0))
+        if self.lives >= 3:
+            self.screen.blit(self.corazon, (100, 0))
 
-    def ganar(self, lista_items):
-        flag = True
-        for item in lista_items:
-            if item.activo:
-                flag = False
-        if flag:
-            self.gano = True
+    # def ganar(self, lista_items):
+    #     flag = True
+    #     for item in lista_items:
+    #         if item.activo:
+    #             flag = False
+    #     if flag:
+    #         self.gano = True
     
-    def verificar_muerte(self):
-        if self.lives <= 0:
-            self.esta_vivo = False
-            self.is_game_over = True
+    # def verificar_muerte(self):
+    #     if self.lives <= 0:
+    #         self.esta_vivo = False
+    #         self.is_game_over = True
     
-    def actualizar_puntos(self):
-        pass
+    # def actualizar_puntos(self):
+    #     pass
+
 
     def update(self, delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items):
         if self.esta_vivo:
             self.do_movement(delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items)
             self.do_animation(delta_ms)
-            self.verificar_muerte()
-            self.ganar(lista_items)
+            #self.verificar_muerte()
+            #self.ganar(lista_items)
+            self.mostrar_vidas()
     
     def render(self, screen: pygame.Surface):
         if self.esta_vivo:
@@ -403,11 +409,11 @@ class Player(pygame.sprite.Sprite):
                 sys.exit()
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_SPACE:
-                    self.disparar(self.lista_proyectiles)
+                    self.disparar()
                 
             elif evento.type == pygame.KEYUP:
                 if evento.key == pygame.K_SPACE:
-                    self.disparar(self.lista_proyectiles)
+                    self.disparar()
 
 
 
