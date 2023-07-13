@@ -3,7 +3,7 @@ import time
 
 from config import *
 from sprites import *
-FIRE_RATE_INTERVAL = 3
+
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, path_imagen: str, size: tuple, speed: int, posx, posy, direction, screen: pygame.Surface) -> None:
         pygame.sprite.Sprite.__init__(self)

@@ -136,9 +136,6 @@ POS_START_TRAMPA_7 = (200, 0)
 POS_START_TRAMPA_8 = (400, 125)
 POS_START_TRAMPA_9 = (600, 0)
 
-
-
-
 #POS_TIME = ()
 #POS_LIVES = ()
 #------------------------POSICIONES-------------------------------------
@@ -174,7 +171,7 @@ PATH_FONT_DBZ = "./juego_Luca_Gargiulo/assets/fonts/fuente_dbz.ttf"
 #------------------------------------PATHS----------------------------------------------
 
 
-DEBUG = True   # podria  hacer un modo que si lo cambio me muestre todos los  rectangulos  
+DEBUG = False   # podria  hacer un modo que si lo cambio me muestre todos los  rectangulos  
 GAME_TITTLE = "Dragon Ball Z"
 
 DIRECTION_LEFT = "izquierda"
@@ -188,3 +185,13 @@ JUMP_POWER_PLAYER = 15
 FRAME_RATE_MS_PLAYER = 80
 MOVE_RATE_MS_PLAYER = 20
 JUMP_HEIGHT_PLAYER = 100
+
+FIRE_RATE_INTERVAL = 3
+
+import csv
+
+def escribir_csv(score):
+    with open("./juego_Luca_Gargiulo/src/archivo.csv", "w") as nuevo_archivo:
+        w = csv.writer(nuevo_archivo)
+        w.writerow(score)
+

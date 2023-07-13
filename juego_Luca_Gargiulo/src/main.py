@@ -33,7 +33,7 @@ background = pygame.transform.scale(pygame.image.load(PATH_IMAGE_BACKGROUND_4).c
 font = pygame.font.Font(PATH_FONT_DBZ, 48)
 
 score = 0
-sonido_item = pygame.mixer.Sound(PATH_PUNCH_SOUND)
+#sonido_item = pygame.mixer.Sound(PATH_PUNCH_SOUND)
 flag_item = True
 flag_sonido_item = True
 
@@ -140,15 +140,16 @@ def show_start_screen():
         for evento in pygame.event.get():
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_s:
-                    flag = False
+                    play()
         
-        fondo_game_over = pygame.surface.Surface(SIZE_SCREEN)
-        fondo_game_over.fill(BLACK)
-        texto = font.render("Presione S para comenzar", True, (WHITE))
+        # fondo_game_over = pygame.surface.Surface(SIZE_SCREEN)
+        # fondo_game_over.fill(BLACK)
+        background_start = pygame.transform.scale(pygame.image.load(PATH_IMAGE_BACKGROUND_2).convert(), SIZE_SCREEN)
+        texto = font.render("Presione S para jugar", True, (WHITE))
         texto_rect = texto.get_rect()
         texto_rect.center = CENTER
         
-        screen.blit(fondo_game_over, ORIGIN)
+        screen.blit(background_start, ORIGIN)
         screen.blit(texto, texto_rect)
         pygame.display.flip()
 
@@ -170,7 +171,8 @@ def show_game_over_screen():
         #self.restart_game()
         #self.is_game_over = False
         is_running = False
-
+        escribir_csv(str(player.score))
+        #escribir_csv(f"score: {str(player.score)}")
 
 def restart_game(self):
 
@@ -189,11 +191,30 @@ def play():
     is_playing = True
     is_game_over = False
 
+    player.score = 0
     while run:
         reloj.tick(FPS)
 
         keys = pygame.key.get_pressed()
         
+        # baja el volumen
+        if keys[pygame.K_u] and pygame.mixer.music.get_volume() > 0.0:
+            pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() - 0.01)
+            texto_volumen = font.render("bajando volumen", True, BLACK)
+            screen.blit(texto_volumen, (10, 10))
+            #screen.blit("sonido_abajo", (25, 25))
+        elif keys[pygame.K_u] and pygame.mixer.music.get_volume() == 0.0:
+            texto_volumen = font.render("mute", True, BLACK)
+            screen.blit(texto_volumen, (10, 10))
+        # sube el volumen
+        if keys[pygame.K_i] and pygame.mixer.music.get_volume() < 1.0:
+            pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() + 0.01)
+            texto_volumen = font.render("subiendo volumen", True, BLACK)
+            screen.blit(texto_volumen, (10, 10))
+        elif keys[pygame.K_i] and pygame.mixer.music.get_volume() == 1.0:
+            texto_volumen = font.render("max volumen", True, BLACK)
+            screen.blit(texto_volumen, (10, 10))
+
         delta_ms = reloj.tick(FPS)
         screen.blit(background, ORIGIN)
         
@@ -207,6 +228,7 @@ def play():
 
         for plataforma in lista_plataformas:
             plataforma.render(screen)
+        
         
         player.imputs(keys, delta_ms)
         player.events()
@@ -242,8 +264,6 @@ def play():
         
     show_start_screen()
 
-
-
 def render():
     # juego / inicio / game over
     if is_game_over:
@@ -258,7 +278,7 @@ def render():
 
 
 
-play()
+show_start_screen()
 
 
 

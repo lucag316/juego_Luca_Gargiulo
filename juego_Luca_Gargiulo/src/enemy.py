@@ -43,7 +43,7 @@ class EnemyBase(pygame.sprite.Sprite):
             self.frame = 0
     
     def render(self):
-        if self.lives == 1:
+        if self.lives > 0:
             if DEBUG:
                 pygame.draw.rect(self.screen, YELLOW, self.rect)
                 pygame.draw.rect(self.screen, PINK, self.rect_right, 2)

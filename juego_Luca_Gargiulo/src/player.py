@@ -84,7 +84,8 @@ class Player(pygame.sprite.Sprite):
         self.gano = False
         self.esta_vivo = True
         
-        
+        self.font = pygame.font.Font(PATH_FONT_DBZ, 48)
+        self.arial = pygame.font.SysFont("arial", 30)
         
 
     def make_hit(self):
@@ -269,11 +270,12 @@ class Player(pygame.sprite.Sprite):
         for enemigo in lista_enemigos:
             for proyectil in self.lista_proyectiles:
                 if enemigo.lives > 0 and proyectil.rect.colliderect(enemigo.rect):
-                    enemigo.lives -= 1 
+                    enemigo.lives -= 1
                     self.score += 3
             if self.rect_left.colliderect(enemigo.rect_right) or self.rect_right.colliderect(enemigo.rect_left):
-                self.lives -= 3
-                #self.make_hit()
+                self.lives -= 1
+                self.make_hit()
+                self.morir()
                 #print("morir")
         
         for trampa in lista_trampas:
@@ -282,6 +284,8 @@ class Player(pygame.sprite.Sprite):
                 self.make_hit()
                 self.hitting()
                 self.lives -= 1
+                if self.score > 0:
+                    self.score -= 1
                 #print("sacar una vida")
 
         for item in lista_items:
@@ -356,9 +360,24 @@ class Player(pygame.sprite.Sprite):
     #         self.esta_vivo = False
     #         self.is_game_over = True
     
-    # def actualizar_puntos(self):
-    #     pass
-
+    def mostrar_score(self):
+        #print(self.score)
+        texto_score = self.arial.render(f"Score: {self.score}", True, WHITE)
+        #print(texto_score)
+        texto_rect = texto_score.get_rect()
+        texto_rect.center = (1000, 50)
+        self.screen.blit(texto_score, texto_rect)
+    
+    # def mostrar_tiempo(self):
+    #     self.tiempo_transcurrido = time.time()
+    #     if self.tiempo_transcurrido >= 60:
+    #         self.esta_vivo = False
+    #         self.lives = 0
+    #     else:
+    #         tiempo = self.font.render("tiempo: {0}".format(self.tiempo_transcurrido), True, WHITE)
+    #         tiempo_rect = tiempo.get_rect()
+    #         tiempo_rect.center = (600, 50)
+    #         self.screen.blit(tiempo,tiempo_rect)
 
     def update(self, delta_ms, lista_plataformas, lista_trampas, lista_enemigos, lista_items):
         if self.esta_vivo:
@@ -367,6 +386,7 @@ class Player(pygame.sprite.Sprite):
             #self.verificar_muerte()
             #self.ganar(lista_items)
             self.mostrar_vidas()
+            self.mostrar_score()
     
     def render(self, screen: pygame.Surface):
         if self.esta_vivo:
